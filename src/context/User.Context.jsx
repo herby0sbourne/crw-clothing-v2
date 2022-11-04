@@ -3,12 +3,12 @@ import { createUserDocumentFromAuth, onAuthStateChangeListener } from '../utils/
 
 export const UserContext = createContext({
     currentUser: null,
-    setCurrentsUser: () => null,
+    setCurrentUser: () => null,
 });
 
 export const UserProvider = ({ children }) => {
-    const [currentUser, setCurrentsUser] = useState(null);
-    const value = { currentUser, setCurrentsUser };
+    const [currentUser, setCurrentUser] = useState(null);
+    const value = { currentUser, setCurrentUser };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChangeListener((user) => {
@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
                 createUserDocumentFromAuth(user);
             }
             console.log(user);
-            setCurrentsUser(user);
+            setCurrentUser(user);
         });
 
         return unsubscribe;
