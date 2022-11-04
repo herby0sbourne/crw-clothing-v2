@@ -1,13 +1,17 @@
 import { useContext } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { UserContext } from '../../context/User.Context';
+import { CartContext } from '../../context/Cart.Context';
+import CartIcon from '../../components/cartIcon/CartIcon';
 import { signOutUser } from '../../utils/firebase/firebase.utils';
+import CartDropdown from '../../components/cartDropdown/CartDropdown';
 import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 
 import './navigation.scss';
 
 const Navigation = () => {
     const { currentUser } = useContext(UserContext);
+    const { toggleDropdown } = useContext(CartContext);
 
     return (
         <>
@@ -28,7 +32,9 @@ const Navigation = () => {
                             SIGN IN
                         </Link>
                     )}
+                    <CartIcon />
                 </div>
+                {toggleDropdown && <CartDropdown />}
             </div>
             <Outlet />
         </>
