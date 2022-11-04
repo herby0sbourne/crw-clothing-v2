@@ -1,8 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import FormInput from '../formInput/FormInput';
 import CustomBtn from '../customBtn/CustomBtn';
-import { UserContext } from '../../context/User.Context';
 import showToastMessage from '../../utils/notification.utils';
 import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from '../../utils/firebase/firebase.utils';
 
@@ -18,7 +17,6 @@ const defaultFormFields = {
 
 const SignUpForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
-    const { setCurrentsUser } = useContext(UserContext);
     const { displayName, email, password, confirmPassword } = formFields;
 
     const handleChange = (e) => {
@@ -41,7 +39,6 @@ const SignUpForm = () => {
 
         try {
             const { user } = await createAuthUserWithEmailAndPassword(email, password);
-            setCurrentsUser(user);
             await createUserDocumentFromAuth(user, { displayName });
             resetFormFields();
             // toast.update(id, { render: 'User Created', type: 'success', isLoading: false });

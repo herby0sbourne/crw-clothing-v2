@@ -1,17 +1,12 @@
-import { useContext, useState } from 'react';
-import { UserContext } from '../../context/User.Context';
-import {
-    createUserDocumentFromAuth,
-    signInWithGooglePopup,
-    signUserInWithEmailAndPassword,
-} from '../../utils/firebase/firebase.utils';
+import { useState } from 'react';
+import { signInWithGooglePopup, signUserInWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
 import showToastMessage from '../../utils/notification.utils';
 import CustomBtn from '../customBtn/CustomBtn';
 import FormInput from './../formInput/FormInput';
 
 const SignInForm = () => {
     const [user, setUser] = useState({ email: '', password: '' });
-    const { setCurrentsUser } = useContext(UserContext);
+
     const { email, password } = user;
 
     const handleChange = (e) => {
@@ -20,8 +15,7 @@ const SignInForm = () => {
     };
 
     const signInWithGoogle = async () => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+        await signInWithGooglePopup();
     };
 
     const handleSubmit = async (e) => {
@@ -32,7 +26,6 @@ const SignInForm = () => {
             const { user } = await signUserInWithEmailAndPassword(email, password);
             showToastMessage('success', 'Logged In', id);
             setUser({ email: '', password: '' });
-            setCurrentsUser(user);
         } catch (err) {
             switch (err.code) {
                 case 'auth/wrong-password':
@@ -41,6 +34,10 @@ const SignInForm = () => {
 
                 case 'auth/user-not-found':
                     showToastMessage('error', 'No User Found', id);
+                    break;
+
+                case 'auth/email-already-in-use':
+                    showToastMessage('error', 'Email already in use', id);
                     break;
 
                 default:
