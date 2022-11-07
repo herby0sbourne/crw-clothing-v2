@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signInWithGooglePopup, signUserInWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
 import showToastMessage from '../../utils/notification.utils';
-import CustomBtn from '../customBtn/CustomBtn';
+import CustomBtn, { BUTTON_TYPE_CLASSES } from '../customBtn/CustomBtn';
 import FormInput from './../formInput/FormInput';
 
 const SignInForm = () => {
@@ -65,7 +65,7 @@ const SignInForm = () => {
 
                 <div className="buttons-container">
                     <CustomBtn type={'submit'}>SIGN IN</CustomBtn>
-                    <CustomBtn type={'button'} buttonType={'google'} onClick={signInWithGoogle}>
+                    <CustomBtn type={'button'} buttonType={BUTTON_TYPE_CLASSES.google} onClick={signInWithGoogle}>
                         GOOGLE SIGN IN
                     </CustomBtn>
                 </div>
