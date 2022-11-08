@@ -8,7 +8,7 @@ export const BackgroundImage = styled.div`
     background-image: ${({ imageUrl }) => `url(${imageUrl})`};
 `;
 
-export const Body = styled.body`
+export const Body = styled.div`
     height: 90px;
     padding: 0 25px;
     display: flex;
