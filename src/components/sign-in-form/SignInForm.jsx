@@ -23,7 +23,7 @@ const SignInForm = () => {
         const id = showToastMessage('loading', 'Logging...');
 
         try {
-            const { user } = await signUserInWithEmailAndPassword(email, password);
+            await signUserInWithEmailAndPassword(email, password);
             showToastMessage('success', 'Logged In', id);
             setUser({ email: '', password: '' });
         } catch (err) {
