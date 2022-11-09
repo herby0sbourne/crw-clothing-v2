@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { UserContext } from '../../context/User.Context';
 import { CartContext } from '../../context/Cart.Context';
 
 import { signOutUser } from '../../utils/firebase/firebase.utils';
@@ -11,9 +10,11 @@ import CartDropdown from '../../components/cartDropdown/CartDropdown';
 
 import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 import { LogoContainer, NavigationContainer, NavLink, NavLinks } from './navigation.styles.jsx';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../store/user/userSelector';
 
 const Navigation = () => {
-    const { currentUser } = useContext(UserContext);
+    const currentUser = useSelector(selectCurrentUser);
     const { toggleDropdown } = useContext(CartContext);
 
     return (
