@@ -3,16 +3,18 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import logger from 'redux-logger';
 import { rootReducer } from './root-reducer';
+import thunk from 'redux-thunk';
 
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['user'],
+    whitelist: ['cart'],
+    // blacklist: ['user'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [];
+const middleware = [thunk];
 
 if (process.env.NODE_ENV === 'development') {
     middleware.push(logger);
