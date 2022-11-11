@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { signInWithGooglePopup, signUserInWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
-import showToastMessage from '../../utils/notification.utils';
-import CustomBtn, { BUTTON_TYPE_CLASSES } from '../customBtn/CustomBtn';
+import { useDispatch } from 'react-redux';
 import FormInput from './../formInput/FormInput';
+import CustomBtn, { BUTTON_TYPE_CLASSES } from '../customBtn/CustomBtn';
+import showToastMessage from '../../utils/notification.utils';
+import { emailSignInStart, googleSignInStart } from '../../store/user/userAction';
 
 const SignInForm = () => {
+    const dispatch = useDispatch();
     const [user, setUser] = useState({ email: '', password: '' });
 
     const { email, password } = user;
@@ -15,7 +17,7 @@ const SignInForm = () => {
     };
 
     const signInWithGoogle = async () => {
-        await signInWithGooglePopup();
+        dispatch(googleSignInStart());
     };
 
     const handleSubmit = async (e) => {
@@ -23,7 +25,7 @@ const SignInForm = () => {
         const id = showToastMessage('loading', 'Logging...');
 
         try {
-            await signUserInWithEmailAndPassword(email, password);
+            dispatch(emailSignInStart(email, password));
             showToastMessage('success', 'Logged In', id);
             setUser({ email: '', password: '' });
         } catch (err) {

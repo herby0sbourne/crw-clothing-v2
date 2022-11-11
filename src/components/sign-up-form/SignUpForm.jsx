@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import FormInput from '../formInput/FormInput';
 import CustomBtn from '../customBtn/CustomBtn';
+import { signUpStart } from '../../store/user/userAction';
 import showToastMessage from '../../utils/notification.utils';
-import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from '../../utils/firebase/firebase.utils';
 
 import './signupform.scss';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const defaultFormFields = {
@@ -16,6 +18,7 @@ const defaultFormFields = {
 };
 
 const SignUpForm = () => {
+    const dispatch = useDispatch();
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
 
@@ -38,8 +41,9 @@ const SignUpForm = () => {
         // const id = toast.loading('Please wait...');
 
         try {
-            const { user } = await createAuthUserWithEmailAndPassword(email, password);
-            await createUserDocumentFromAuth(user, { displayName });
+            // const { user } = await createAuthUserWithEmailAndPassword(email, password);
+            // await createUserDocumentFromAuth(user, { displayName });
+            dispatch(signUpStart(email, password, displayName));
             resetFormFields();
             // toast.update(id, { render: 'User Created', type: 'success', isLoading: false });
         } catch (err) {
