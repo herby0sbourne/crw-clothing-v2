@@ -35,3 +35,4 @@ yarn-error.log*
 oldcode.txt
 # Local Netlify folder
 .netlify
+.vercel
