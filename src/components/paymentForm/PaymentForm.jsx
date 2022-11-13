@@ -16,41 +16,43 @@ const PaymentForm = () => {
     const paymentHandler = async (e) => {
         e.preventDefault();
 
+        const vercelTest = await fetch('/api/checkout_sessions').then((res) => res.json());
+        console.log(vercelTest);
         if (!stripe || !elements) {
             return;
         }
 
-        setProcessingPayment(true);
+        // setProcessingPayment(true);
 
-        const response = await fetch('/.netlify/functions/create-payment-intent', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount: cartTotal * 100 }),
-        }).then((res) => res.json());
+        // const response = await fetch('/.netlify/functions/create-payment-intent', {
+        //     method: 'post',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({ amount: cartTotal * 100 }),
+        // }).then((res) => res.json());
 
-        const clientSecret = response.paymentIntent.client_secret;
+        // const clientSecret = response.paymentIntent.client_secret;
 
-        const paymentResult = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: elements.getElement(CardElement),
-                billing_details: {
-                    name: currentUser ? currentUser.displayName : 'Guest',
-                },
-            },
-        });
+        // const paymentResult = await stripe.confirmCardPayment(clientSecret, {
+        //     payment_method: {
+        //         card: elements.getElement(CardElement),
+        //         billing_details: {
+        //             name: currentUser ? currentUser.displayName : 'Guest',
+        //         },
+        //     },
+        // });
 
-        setProcessingPayment(false);
+        // setProcessingPayment(false);
 
-        if (paymentResult.error) {
-            console.log(paymentResult.error);
-            alert(paymentResult.error.message);
-        } else {
-            if (paymentResult.paymentIntent.status === 'succeeded') {
-                alert('payment success');
-            }
-        }
+        // if (paymentResult.error) {
+        //     console.log(paymentResult.error);
+        //     alert(paymentResult.error.message);
+        // } else {
+        //     if (paymentResult.paymentIntent.status === 'succeeded') {
+        //         alert('payment success');
+        //     }
+        // }
     };
 
     return (
