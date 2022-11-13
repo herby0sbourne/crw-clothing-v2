@@ -16,8 +16,8 @@ const PaymentForm = () => {
     const paymentHandler = async (e) => {
         e.preventDefault();
 
-        const vercelTest = await fetch('/api/checkout_sessions').then((res) => res.json());
-        console.log(vercelTest);
+        const Test = await fetch('/api/checkout_sessions').then((res) => res.json());
+        console.log(Test);
         if (!stripe || !elements) {
             return;
         }
