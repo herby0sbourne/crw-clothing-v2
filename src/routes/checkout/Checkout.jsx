@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import CheckoutItem from '../../components/checkoutitem/CheckoutItem';
 import PaymentForm from '../../components/paymentForm/PaymentForm';
 import { selectCartItems, selectCartTotal } from '../../store/cart/cartSelector';
+import StripeCheckOut from '../../components/stripeCheckout/StripeCheckout';
 
 import './checkout.scss';
 
@@ -32,7 +33,8 @@ const Checkout = () => {
                 return <CheckoutItem key={cartItem.id} cartItem={cartItem} />;
             })}
             <span className="total">Total: ${totalCost}</span>
-            <PaymentForm />
+            {process.env.REACT_APP_NETLIFY_SERVERLESS_FUNCTION && <PaymentForm />}
+            {process.env.REACT_APP_VERCEL_SERVERLESS_FUNCTION && <StripeCheckOut />}
         </div>
     );
 };
