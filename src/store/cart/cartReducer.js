@@ -18,7 +18,7 @@ export const cartReducer = (state = INITIAL_STATE, action = {}) => {
         case CART_ACTION_TYPES.TOGGLE_CART_DROPDOWN:
             return {
                 ...state,
-                toggleDropdown: !state.toggleDropdown,
+                toggleDropdown: payload,
             };
 
         default:

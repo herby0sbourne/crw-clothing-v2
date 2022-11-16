@@ -2,7 +2,7 @@ import CART_ACTION_TYPES from './cartTypes';
 import createAction from '../../utils/reducer/reducer.utils';
 import { addCartItem, clearCartItem, removeCartItem } from './cartUtils';
 
-export const setToggleDropdown = () => createAction(CART_ACTION_TYPES.TOGGLE_CART_DROPDOWN, null);
+export const setToggleDropdown = (boolean) => createAction(CART_ACTION_TYPES.TOGGLE_CART_DROPDOWN, boolean);
 
 export const addItemToCart = (cartItems, productToAdd) => {
     const newCartItems = addCartItem(cartItems, productToAdd);
