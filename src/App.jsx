@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { checkUserSession } from './store/user/userAction';
+
 import Home from './routes/home/Home';
 import Shop from './routes/shop/Shop';
 import Checkout from './routes/checkout/Checkout';
 import Navigation from './routes/navigation/Navigation';
 import Authentication from './routes/authentication/Authentication';
-import { checkUserSession } from './store/user/userAction';
 
 import 'react-toastify/dist/ReactToastify.css';
 
