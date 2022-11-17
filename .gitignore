@@ -36,3 +36,5 @@ oldcode.txt
 # Local Netlify folder
 .netlify
 .vercel
+
+.vscode
