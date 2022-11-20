@@ -1,5 +1,15 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from 'firebase/firestore';
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    collection,
+    writeBatch,
+    query,
+    getDocs,
+    QueryDocumentSnapshot,
+} from 'firebase/firestore';
 import {
     getAuth,
     signInWithRedirect,
@@ -9,7 +19,11 @@ import {
     GoogleAuthProvider,
     signOut,
     onAuthStateChanged,
+    User,
+    NextOrObserver,
 } from 'firebase/auth';
+
+import { Category } from '../../store/categories/categoryTypes';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyBBuyKADtiUDgjue6uD7uGgJFxizomdlxQ',
@@ -33,7 +47,12 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googlePro
 
 export const db = getFirestore();
 
-export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
+export type ObjectToAdd = { title: string };
+
+export const addCollectionAndDocument = async <T extends ObjectToAdd>(
+    collectionKey: string,
+    objectsToAdd: T[]
+): Promise<void> => {
     const collectionRef = collection(db, collectionKey);
     const batch = writeBatch(db);
 
@@ -46,12 +65,12 @@ export const addCollectionAndDocument = async (collectionKey, objectsToAdd) => {
     console.log('done');
 };
 
-export const getCollectionAndDocuments = async () => {
+export const getCollectionAndDocuments = async (): Promise<Category[]> => {
     const collectionRef = collection(db, 'categories');
     const q = query(collectionRef);
 
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data() as Category);
 
     /*
     const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
@@ -64,7 +83,21 @@ export const getCollectionAndDocuments = async () => {
     */
 };
 
-export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
+export type AddtionalInformation = {
+    displayName?: string;
+};
+
+export type UserData = {
+    email: string;
+    displayName: string;
+
+    createdAt: Date;
+};
+
+export const createUserDocumentFromAuth = async (
+    userAuth: User,
+    additionalInfo = {} as AddtionalInformation
+): Promise<void | QueryDocumentSnapshot<UserData>> => {
     if (!userAuth) return;
 
     const userDocRef = doc(db, 'users', userAuth.uid);
@@ -77,19 +110,19 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) 
         try {
             await setDoc(userDocRef, { displayName, email, createdAt, ...additionalInfo });
         } catch (error) {
-            console.log('error creating user', error.message);
+            console.log('error creating user', error);
         }
     }
 
-    return userSnapshot;
+    return userSnapshot as QueryDocumentSnapshot<UserData>;
 };
 
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
+export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
     if (!email || !password) return;
     return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signUserInWithEmailAndPassword = async (email, password) => {
+export const signUserInWithEmailAndPassword = async (email: string, password: string) => {
     if (!email || !password) return;
 
     return await signInWithEmailAndPassword(auth, email, password);
@@ -97,9 +130,9 @@ export const signUserInWithEmailAndPassword = async (email, password) => {
 
 export const signOutUser = async () => await signOut(auth);
 
-export const onAuthStateChangeListener = (callback) => onAuthStateChanged(auth, callback);
+export const onAuthStateChangeListener = (callback: NextOrObserver<User>) => onAuthStateChanged(auth, callback);
 
-export const getCurrentUser = () => {
+export const getCurrentUser = (): Promise<User | null> => {
     return new Promise((resolve, reject) => {
         const unsubscribe = onAuthStateChanged(
             auth,
