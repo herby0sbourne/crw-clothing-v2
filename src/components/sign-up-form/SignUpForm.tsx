@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { AuthError, AuthErrorCodes } from 'firebase/auth';
 import FormInput from '../formInput/FormInput';
 import CustomBtn from '../customBtn/CustomBtn';
 import { signUpStart } from '../../store/user/userAction';
@@ -22,7 +23,7 @@ const SignUpForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormFields({ ...formFields, [name]: value });
     };
@@ -31,7 +32,7 @@ const SignUpForm = () => {
         setFormFields(defaultFormFields);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
@@ -48,12 +49,12 @@ const SignUpForm = () => {
             // toast.update(id, { render: 'User Created', type: 'success', isLoading: false });
         } catch (err) {
             // toast.update(id, { render: 'Creating user failed', type: 'error', isLoading: false });
-            if (err.code === 'auth/email-already-in-use') {
+            if ((err as AuthError).code === AuthErrorCodes.EMAIL_EXISTS) {
                 alert('email already in use');
             } else {
                 console.log('error creating user', err);
-                console.log(err.message);
-                console.log(err.code);
+                console.log((err as AuthError).message);
+                console.log((err as AuthError).code);
             }
         }
     };

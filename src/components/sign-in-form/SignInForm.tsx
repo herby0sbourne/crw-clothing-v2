@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import FormInput from './../formInput/FormInput';
+import { AuthError, AuthErrorCodes } from 'firebase/auth';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import FormInput from '../formInput/FormInput';
 import CustomBtn, { BUTTON_TYPE_CLASSES } from '../customBtn/CustomBtn';
 import showToastMessage from '../../utils/notification.utils';
 import { emailSignInStart, googleSignInStart } from '../../store/user/userAction';
@@ -11,7 +12,7 @@ const SignInForm = () => {
 
     const { email, password } = user;
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setUser({ ...user, [name]: value });
     };
@@ -20,7 +21,7 @@ const SignInForm = () => {
         dispatch(googleSignInStart());
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const id = showToastMessage('loading', 'Logging...');
 
@@ -29,22 +30,23 @@ const SignInForm = () => {
             showToastMessage('success', 'Logged In', id);
             setUser({ email: '', password: '' });
         } catch (err) {
-            switch (err.code) {
-                case 'auth/wrong-password':
+            switch ((err as AuthError).code) {
+                case AuthErrorCodes.INVALID_PASSWORD:
                     showToastMessage('error', 'password or email incorrect', id);
                     break;
 
-                case 'auth/user-not-found':
+                case AuthErrorCodes.USER_DELETED:
                     showToastMessage('error', 'No User Found', id);
                     break;
 
-                case 'auth/email-already-in-use':
+                case AuthErrorCodes.EMAIL_EXISTS:
                     showToastMessage('error', 'Email already in use', id);
                     break;
 
                 default:
-                    console.log(err.message);
-                    console.log(err.code);
+                    console.log((err as AuthError).message);
+                    // @ts-ignore
+                    console.log((err as AuthError).code);
                     break;
             }
         }

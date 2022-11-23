@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { BUTTON_TYPE_CLASSES } from '../customBtn/CustomBtn';
@@ -13,7 +13,7 @@ const PaymentForm = () => {
     const currentUser = useSelector(selectCurrentUser);
     const [processingPayment, setProcessingPayment] = useState(false);
 
-    const paymentHandler = async (e) => {
+    const paymentHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!stripe || !elements) {
@@ -32,9 +32,13 @@ const PaymentForm = () => {
 
         const clientSecret = response.paymentIntent.client_secret;
 
+        const cardDetails = elements.getElement(CardElement);
+
+        if (cardDetails === null) return;
+
         const paymentResult = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
-                card: elements.getElement(CardElement),
+                card: cardDetails,
                 billing_details: {
                     name: currentUser ? currentUser.displayName : 'Guest',
                 },
