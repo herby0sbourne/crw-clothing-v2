@@ -1,4 +1,7 @@
-export const loggerMiddleware = (store) => (next) => (action) => {
+import { Middleware } from 'redux';
+import { RootSate } from '../store';
+
+export const loggerMiddleware: Middleware<{}, RootSate> = (store) => (next) => (action) => {
     if (!action.type) {
         return next(action);
     }
