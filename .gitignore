@@ -31,5 +31,9 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+.netlify
+.vercel
+.vscode
+*.env
 
 oldcode.txt
